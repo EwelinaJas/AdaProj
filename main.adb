@@ -1,4 +1,4 @@
-with Text_IO; use Text_IO;
+ with Text_IO; use Text_IO;
 with stosPackage; use stosPackage;
 with Semafory; use Semafory;
 with Ada.Calendar;
@@ -75,7 +75,9 @@ procedure Main is
                                       (0.09,0.19,0.29,0.43,0.0,0.0,0.0,0.0,0.0));
    -- cialo zadania Serwer
    task body Serwer is
-      idw, z, x:Integer; --zmienne pomocnicze z - numer wybanego bufora, x - wg zadania liczba przenoszona
+      idw:Integer;
+      z:Integer; --zmienne pomocnicze z - numer wybanego bufora
+      x:Float; --zmienne pomocnicze x - wg zadania liczba przenoszona
       p:Float;  -- zmienna przechowujaca prawdopodobienstwo
       G:Generator;
       time:Float;
@@ -467,8 +469,8 @@ begin
 end Posrednik;
 
 task body Klient is
-idw, z:Integer;
-x:Integer;
+idw, z:Float;
+x:Float;
 p:Float;
 G:Generator;
 time:Float;
@@ -479,94 +481,94 @@ begin
     Time:=Random(G) * 10.0;
     Delay(Duration(Time));
     p:=Random(G);
-    if idw = 1 then
+    if idw = 1.0 then
           if p <= T(7,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21;
+               z:=21.0;
 
             elsif p<=(T(7,1) + T(7,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22;
+               z:=22.0;
 
             elsif p<=(T(7,1) + T(7,2) + T(7,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23;
+               z:=23.0;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24;
+               z:=24.0;
             end if;
 
-         elsif idw = 2 then
+         elsif idw = 2.0 then
             if p <= T(8,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21;
+               z:=21.0;
 
             elsif p<=(T(8,1) + T(8,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22;
+               z:=22.0;
 
             elsif p<=(T(8,1) + T(8,2) + T(8,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23;
+               z:=23.0;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24;
+               z:=24.0;
             end if;
 
-         elsif idw = 3 then
+         elsif idw = 3.0 then
             if p <= T(9,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21;
+               z:=21.0;
 
             elsif p<=(T(9,1) + T(9,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22;
+               z:=22.0;
 
             elsif p<=(T(9,1) + T(9,2) + T(9,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23;
+               z:=23.0;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24;
+               z:=24.0;
             end if;
     end if;
 
@@ -578,7 +580,7 @@ begin
         else
           Sem.PB;
           pobierz(Buff,x);
-          Put_line("--->> Klient "&integer'image(idw)&" pobral z bufora ["&integer'image(z)&"] liczbe "&Integer'image(x)&" i odwiesza semafor bufora.");
+          Put_line("--->> Klient "&integer'image(idw)&" pobral z bufora ["&integer'image(z)&"] liczbe "&Float'image(x)&" i odwiesza semafor bufora.");
           Sem.VB;
           SemF.VB;
         end if;
@@ -600,4 +602,4 @@ K3:Klient(id=>3);
 
 begin
    null;
-end Main;
+end Main;  
