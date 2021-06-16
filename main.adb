@@ -6,9 +6,9 @@ with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
 
 
 procedure Main is
-   pojemnosc:Integer:=10;          -- deklaracja zmiennej przechowujacej pojemnosc buforow
-   task type Serwer(id: Integer);  -- deklaracja zadania serwer z parametrem
-   task type Klient(id:Integer);   -- deklaracja zadania klient z parametrem
+   pojemnosc:Integer:=10;          -- pojemnosc bufora
+   task type Serwer(id: Integer);  -- serwer z parameterm
+   task type Klient(id:Integer);   -- klient z parametrem 
    task type Posrednik(id:Integer);   -- deklaracja zadania posrednika z parametrem
 
    Buff:Access stosStruktura;  -- deklaracja pointera dla bufora
@@ -27,21 +27,6 @@ procedure Main is
    Sem12:Aliased Semafor_Binarny(1);
    Sem12Empty:Aliased Semafor_binarny(1);
    Sem12Full:Aliased Semafor_binarny(1);
-
-   B13:Aliased stosStruktura(pojemnosc);
-   Sem13:Aliased Semafor_Binarny(1);
-   Sem13Empty:Aliased Semafor_binarny(1);
-   Sem13Full:Aliased Semafor_binarny(1);
-
-   B14:Aliased stosStruktura(pojemnosc);
-   Sem14:Aliased Semafor_Binarny(1);
-   Sem14Empty:Aliased Semafor_binarny(1);
-   Sem14Full:Aliased Semafor_binarny(1);
-
-   B15:Aliased stosStruktura(pojemnosc);
-   Sem15:Aliased Semafor_Binarny(1);
-   Sem15Empty:Aliased Semafor_binarny(1);
-   Sem15Full:Aliased Semafor_binarny(1);
 
    B21:Aliased stosStruktura(pojemnosc);
    Sem21:Aliased Semafor_Binarny(1);
@@ -62,7 +47,9 @@ procedure Main is
    Sem24:Aliased Semafor_Binarny(1);
    Sem24Empty:Aliased Semafor_binarny(1);
    Sem24Full:Aliased Semafor_binarny(1);
+   
    -- koniec deklaracji buforow i semaforow
+   
    -- tablica prawdopodobienstwa dla S/B/K
    T: array (1..9, 1..9) of Float := ((0.1,0.15,0.2,0.25,0.3,0.0,0.0,0.0,0.0),
                                       (0.01,0.09,0.15,0.25,0.5,0.0,0.0,0.0,0.0),
@@ -76,18 +63,18 @@ procedure Main is
    -- cialo zadania Serwer
    task body Serwer is
       idw:Integer;
-      z:Integer; --zmienne pomocnicze z - numer wybanego bufora
-      x:Float; --zmienne pomocnicze x - wg zadania liczba przenoszona
-      p:Float;  -- zmienna przechowujaca prawdopodobienstwo
+      z:Integer; --z - numer wybanego bufora
+      x:Float; -- x - wg zadania liczba przenoszona
+      p:Float;  -- prawdopodobienstwo
       G:Generator;
       time:Float;
    begin
       Reset(G);
       idw:=id; -- przypisanie numeru serwera
       loop
-         x := Float(Random(G)*100.0); -- generowanie losowej liczby Float
+         x := Float(Random(G)*1.0); -- generowanie losowej liczby Float
          --Put_Line("<<--- Serwer "&Integer'Image(idw)&" wygenerowal liczbe: "&Integer'Image(x));
-         Time:=Random(G) * 10.0;  -- ustawianie czasu zwloki
+         Time:=Random(G) * 100.0;  -- ustawianie czasu zwloki
          Delay(Duration(Time));  -- zwloka
          p:=Random(G);  -- generowanie liczny Float prawdopodobienstwa
 
@@ -106,28 +93,6 @@ procedure Main is
                SemF:=Sem12Full'Access;
                z:=12;
 
-            elsif p<=(T(1,1) + T(1,2) + T(1,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(1,1) + T(1,2) + T(1,3) + T(1,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
-            end if;
-
          elsif idw = 2 then
             if p <= T(2,1) then
                Buff:=B11'Access;
@@ -143,26 +108,6 @@ procedure Main is
                SemF:=Sem12Full'Access;
                z:=12;
 
-            elsif p<=(T(2,1) + T(2,2) + T(2,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(2,1) + T(2,2) + T(2,3) + T(2,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
             end if;
       elsif idw = 3 then
             if p <= T(3,1) then
@@ -178,27 +123,6 @@ procedure Main is
                SemE:=Sem12Empty'Access;
                SemF:=Sem12Full'Access;
                z:=12;
-
-            elsif p<=(T(3,1) + T(3,2) + T(3,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(3,1) + T(3,2) + T(3,3) + T(3,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
             end if;
 
       end if;
@@ -209,19 +133,20 @@ procedure Main is
               Put_line("<<--x Serwer "&integer'image(idw)&" trafil na pelny bufor ["&integer'image(z)&"].");
               SemF.PB;
             else
-              Sem.PB;
+              Sem.PB; --blokada dostepu do bufora 
               wstaw(Buff,x);
-              Put_line("<<--- Serwer "&integer'image(idw)&" wstawil do bufora ["&integer'image(z)&"] liczbe '"&Integer'image(x)&"' i odwiesza semafor bufora.");
+              Put_line("<<--- Serwer "&integer'image(idw)&" wstawil do bufora ["&integer'image(z)&"] liczbe '"&Float'image(x)&"' i odwiesza semafor bufora.");
               Sem.VB;
-              SemE.VB;
+              SemE.VB; -- odblokowanie dostepu do bufora 
             end if;
-   Reset(G);
+            Reset(G);
+       end if; 
    end loop;
 end Serwer;
 
 task body Posrednik is
 idw, z:Integer;
-x:Integer;
+x:Float;
 p:Float;
 G:Generator;
 time:Float;
@@ -245,28 +170,8 @@ begin
                Sem:=Sem12'Access;
                SemE:=Sem12Empty'Access;
                SemF:=Sem12Full'Access;
-               z:=12;
-
-            elsif p<=(T(4,1) + T(4,2) + T(4,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(4,1) + T(4,2) + T(4,3) + T(4,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
+                  z:=12;
+                  
             end if;
 
          elsif idw = 2 then
@@ -284,26 +189,6 @@ begin
                SemF:=Sem12Full'Access;
                z:=12;
 
-            elsif p<=(T(5,1) + T(5,2) + T(5,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(5,1) + T(5,2) + T(5,3) + T(5,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
             end if;
 
          elsif idw = 3 then
@@ -321,26 +206,6 @@ begin
                SemF:=Sem12Full'Access;
                z:=12;
 
-            elsif p<=(T(6,1) + T(6,2) + T(6,3)) then
-               Buff:=B13'Access;
-               Sem:=Sem13'Access;
-               SemE:=Sem13Empty'Access;
-               SemF:=Sem13Full'Access;
-               z:=13;
-
-            elsif p<=(T(6,1) + T(6,2) + T(6,3) + T(6,4)) then
-               Buff:=B14'Access;
-               Sem:=Sem14'Access;
-               SemE:=Sem14Empty'Access;
-               SemF:=Sem14Full'Access;
-               z:=14;
-
-            else
-               Buff:=B15'Access;
-               Sem:=Sem15'Access;
-               SemE:=Sem15Empty'Access;
-               SemF:=Sem15Full'Access;
-               z:=15;
             end if;
     end if;
 
@@ -352,7 +217,7 @@ begin
         else
           Sem.PB;
           pobierz(Buff,x);
-          Put_line("<<->> Posrednik "&integer'image(idw)&" pobral z bufora ["&integer'image(z)&"] liczbe '"&Integer'image(x)&"' i odwiesza semafor bufora.");
+          Put_line("<<->> Posrednik "&integer'image(idw)&" pobral z bufora ["&integer'image(z)&"] liczbe '"&Float'image(x)&"' i odwiesza semafor bufora.");
           Sem.VB;
           SemF.VB;
         end if;
@@ -460,7 +325,7 @@ begin
             else
               Sem.PB;
               wstaw(Buff,x);
-              Put_line("<<->> Posrednik "&integer'image(idw)&" wstawil do bufora ["&integer'image(z)&"] liczbe '"&Integer'image(x)&"' i odwiesza semafor bufora.");
+              Put_line("<<->> Posrednik "&integer'image(idw)&" wstawil do bufora ["&integer'image(z)&"] liczbe '"&Float'image(x)&"' i odwiesza semafor bufora.");
               Sem.VB;
               SemE.VB;
             end if;
@@ -469,7 +334,7 @@ begin
 end Posrednik;
 
 task body Klient is
-idw, z:Float;
+idw, z:Integer;
 x:Float;
 p:Float;
 G:Generator;
@@ -481,94 +346,94 @@ begin
     Time:=Random(G) * 10.0;
     Delay(Duration(Time));
     p:=Random(G);
-    if idw = 1.0 then
+    if idw = 1 then
           if p <= T(7,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21.0;
+               z:=21;
 
             elsif p<=(T(7,1) + T(7,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22.0;
+               z:=22;
 
             elsif p<=(T(7,1) + T(7,2) + T(7,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23.0;
+               z:=23;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24.0;
+               z:=24;
             end if;
 
-         elsif idw = 2.0 then
+         elsif idw = 2 then
             if p <= T(8,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21.0;
+               z:=21;
 
             elsif p<=(T(8,1) + T(8,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22.0;
+               z:=22;
 
             elsif p<=(T(8,1) + T(8,2) + T(8,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23.0;
+               z:=23;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24.0;
+               z:=24;
             end if;
 
-         elsif idw = 3.0 then
+         elsif idw = 3 then
             if p <= T(9,1) then
                Buff:=B21'Access;
                Sem:=Sem21'Access;
                SemE:=Sem21Empty'Access;
                SemF:=Sem21Full'Access;
-               z:=21.0;
+               z:=21;
 
             elsif p<=(T(9,1) + T(9,2)) then
                Buff:=B22'Access;
                Sem:=Sem22'Access;
                SemE:=Sem22Empty'Access;
                SemF:=Sem22Full'Access;
-               z:=22.0;
+               z:=22;
 
             elsif p<=(T(9,1) + T(9,2) + T(9,3)) then
                Buff:=B23'Access;
                Sem:=Sem23'Access;
                SemE:=Sem23Empty'Access;
                SemF:=Sem23Full'Access;
-               z:=23.0;
+               z:=23;
 
             else
                Buff:=B24'Access;
                Sem:=Sem24'Access;
                SemE:=Sem24Empty'Access;
                SemF:=Sem24Full'Access;
-               z:=24.0;
+               z:=24;
             end if;
     end if;
 
@@ -602,4 +467,4 @@ K3:Klient(id=>3);
 
 begin
    null;
-end Main;  
+end Main;
