@@ -7,7 +7,7 @@ package body stosPackage is
 	procedure pobierz(s:Access stosStruktura; x:out Float) is
 	begin
       x:=s.St(s.wsk);
-      s.st(s.wsk):=0;
+      s.st(s.wsk):=0.0;
       s.wsk:=s.wsk-1;
 	end pobierz;
 	function pelny(S:Access stosStruktura) return boolean is 
