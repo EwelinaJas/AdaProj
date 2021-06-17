@@ -1,3 +1,5 @@
+--definicja semaforow 
+
 package body Semafory is		
 						
   protected body Semafor_binarny is
