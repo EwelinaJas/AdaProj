@@ -1,3 +1,4 @@
+-- definicja semaforow 
 package Semafory is			 
 						
   type Wart_binarna is range 0..1;
@@ -8,4 +9,4 @@ package Semafory is
     Wart: Wart_binarna := Wart_poczatkowa;
   end Semafor_binarny;
 
-end Semafory;
+end Semafory;		
